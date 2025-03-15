@@ -1,62 +1,56 @@
 import React from "react";
-import { TextField, Button, Typography, Box, Paper, Grid, Input } from "@mui/material";
+import { TextField, Button, Typography, Container, Box } from "@mui/material";
+import backgroundImage from "../../../assets/auth/RegisterImage.jpeg"; // Adjust path accordingly
+import logo from "../../../assets/auth/navbarlogo.png"; // Adjust path accordingly
 
-const RegisterForm = () => {
+const SignUp = () => {
   return (
-    <Box
-      sx={{
-       backgroundImage: `url(https://source.unsplash.com/1600x900/?graduation)`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Paper
-        elevation={3}
+    <Container maxWidth={false} sx={{ display: "flex", height: "600", width: "900" }}>
+      {/* Left Side - Image */}
+      <Box
         sx={{
-          padding: 4,
-          maxWidth: 500,
-          width: "100%",
-          backgroundColor: "rgba(255, 255, 255, 0.8)",
-          backdropFilter: "blur(5px)",
+          flex: 1,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#f0f4ff",
         }}
       >
-        <Typography variant="h5" sx={{ textAlign: "center", mb: 3, color: "#d81b60" }}>
-          Register Now
+        <img src={backgroundImage} alt="Signup Illustration" width={500} height={500} />
+      </Box>
+
+      {/* Right Side - Signup Form */}
+      <Box
+        sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#b3e5fc",
+          padding: 4,
+        }}
+      >
+        <img src={logo} alt="Company Logo" width={250} height={125} style={{ marginBottom: 16 }} />
+        <Typography variant="h4" gutterBottom>
+          Sign Up
         </Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <TextField fullWidth label="Your Name" required variant="outlined" />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField fullWidth label="Your Email" required variant="outlined" />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField fullWidth label="Your Password" required type="password" variant="outlined" />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField fullWidth label="Confirm Password" required type="password" variant="outlined" />
-          </Grid>
-          <Grid item xs={12}>
-            <Input type="file" fullWidth required />
-          </Grid>
-          <Grid item xs={12} sx={{ textAlign: "center" }}>
-            <Typography variant="body2">
-              Already have an account? <span style={{ color: "#d81b60", cursor: "pointer" }}>Login Now</span>
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Button fullWidth variant="contained" color="secondary">
-              Register Now
-            </Button>
-          </Grid>
-        </Grid>
-      </Paper>
-    </Box>
+        <form style={{ width: "100%" }}>
+          <TextField label="First Name" variant="outlined" fullWidth margin="normal" required />
+          <TextField label="Last Name" variant="outlined" fullWidth margin="normal" required />
+          <TextField label="Email Address" type="email" variant="outlined" fullWidth margin="normal" required />
+          <TextField label="Password" type="password" variant="outlined" fullWidth margin="normal" required />
+          {/* <TextField label="Confirm Password" type="password" variant="outlined" fullWidth margin="normal" required /> */}
+          <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+            Register
+          </Button>
+        </form>
+        <Typography variant="body2" sx={{ mt: 2 }}>
+          Already have an account? <a href="/Login">Login Now</a>
+        </Typography>
+      </Box>
+    </Container>
   );
 };
 
-export default RegisterForm;
+export default SignUp;
