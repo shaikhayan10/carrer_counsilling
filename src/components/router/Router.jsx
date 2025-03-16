@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom"; 
+import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom"; 
 import RegisterForm from "../common/auth/Register";
 import LoginForm from "../common/auth/Login";
 import NavbarMenu from "../common/customer/Navbar";
@@ -22,95 +22,104 @@ import ServicesPage from "../common/customer/Services";
 import ForgetPage from "../common/customer/Forget";
 import React from "react";
 
-const MainRouter = () => {
+const MainRouter = ({children}) => {
     const routesData = createBrowserRouter([
+    {
+        path: "/Register",
+        element: <RegisterForm />,
+        errorElement: <h1>Error</h1>,
+    },
+    {
+        path: "/Login",
+        element: <LoginForm />,
+        errorElement: <h1>Error</h1>,
+    },
+    {
+        path: "/",
+        element: <NavbarMenu />,
+        children : [
         {
-            path: "/Register",
-            element: <RegisterForm />,
-            errorElement: <h1>Error</h1>,
-        },
-        {
-            path: "/Login",
-            element: <LoginForm />,
-            errorElement: <h1>Error</h1>,
-        },
-        {
-            path: "/Navbar",
-            element: <NavbarMenu />,
-            errorElement: <h1>Error</h1>,
-        },
-        {
-            path: "/Home",
+            path: "",
             element: <HomePage />,
             errorElement: <h1>Error</h1>,
         },
         {
-            path: "/Procedure",
+            path: "Home",
+            element: <HomePage />,
+            errorElement: <h1>Error</h1>,
+        },
+        {
+            path: "Procedure",
             element: <ProcedurePage />,
             errorElement: <h1>Error</h1>,
         },
         {
-            path: "/Form",
+            path : "Navbar",
+            element : <NavbarMenu />,
+            errorElement : <h1>Error...</h1>
+        },
+        {
+            path: "Form",
             element: <FormPage />,
             errorElement: <h1>Error</h1>,
         },
         {
-            path: "/Footer",
+            path: "Footer",
             element: <FooterPage />,
             errorElement: <h1>Error</h1>,
         },
         {
-            path: "/About_us",
+            path: "About_us",
             element: <AboutPage />,
             errorElement: <h1>Error</h1>,
         },
         {
-            path: "/Quiz",
+            path: "Quiz",
             element: <QuizPage />,
             errorElement: <h1>Error</h1>,
         },
         {
-            path: "/Logout",
+            path: "Logout",
             element: <LogoutPage />,
             errorElement: <h1>Error</h1>,
         },
         {
-            path: "/Quizprompt",
+            path: "Quizprompt",
             element: <QuizpromptPage />,
             errorElement: <h1>Error</h1>,
         },
         {
-            path: "/Scorecard",
+            path: "Scorecard",
             element: <ScorecardPage />,
             errorElement: <h1>Error</h1>,
         },
         {
-            path: "/Coursedirectory",
+            path: "Coursedirectory",
             element: <CoursedirectoryPage />,
             errorElement: <h1>Error</h1>,
         },
         {
-            path: "/Schooldirectory",
+            path: "Schooldirectory",
             element: <SchooldirectoryPage />,
             errorElement: <h1>Error</h1>,
         },
         {
-            path: "/Collegedirectory",
+            path: "Collegedirectory",
             element: <CollegedirectoryPage />,
             errorElement: <h1>Error</h1>,
         },
         {
-            path: "/Award",
+            path: "Award",
             element: <AwardPage />,
             errorElement: <h1>Error</h1>,
         },
         {
-            path: "/Meritcollege",
+            path: "Meritcollege",
             element:<MeritcollegePage />,
             errorElement: <h1>Error</h1>,
         },
         {
-            path: "/Meritschool",
+            path: "Meritschool",
             element: <MeritschoolPage />,
             errorElement: <h1>Error</h1>,
         },
@@ -120,20 +129,32 @@ const MainRouter = () => {
             errorElement: <h1>Error</h1>,
         },
         {
-            path: "/Services",
+            path: "Services",
             element: <ServicesPage />,
             errorElement: <h1>Error</h1>,
         },
         {
-            path: "/Forget",
+            path: "Forget",
             element: <ForgetPage />,
             errorElement: <h1>Error</h1>,
         },
+    ]
+    },
+        {
+            path:"/user",
+            element:<h1>customer</h1>,
+            children:[]
+        },
+        {
+            // Fallback route: Redirect to login if no match is found
+            path: "*",
+            element: <Navigate to="/" />,
+        },       
     ]);
 
     return (
         <React.Fragment>
-            <RouterProvider router={routesData} />
+            <RouterProvider router={routesData}>{children}</RouterProvider>
         </React.Fragment>
     );
 };
