@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { Button, Typography, Grid, Card, CardMedia, CardContent } from "@mui/material";
+import { Box, Button, Typography, Grid, Card, CardMedia, CardContent, Container } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Description } from "@mui/icons-material";
 import Navbar from "../customer/Navbar";
-import Footer from "../customer/Footer";
+import Footer from "../customer/Footer"; // Import the Footer component
 
 // Import images
 import article1 from "../../../assets/auth/article1.png";
@@ -16,6 +16,7 @@ import image1 from "../../../assets/auth/image1.jpeg";
 import image2 from "../../../assets/auth/image2.png";
 import image3 from "../../../assets/auth/image3.jpg";
 
+// Articles Data
 const articles = [
   {
     title: "FutureProof Your Career: Skills for 2025 and Beyond",
@@ -37,16 +38,22 @@ const articles = [
   },
 ];
 
+// Images for Slider
 const images = [image1, image2, image3];
 
 const MergedSection = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Initialize navigation function
+
+  // State for Read More functionality
   const [expanded, setExpanded] = useState(Array(articles.length).fill(false));
 
   const toggleReadMore = (index) => {
-    setExpanded((prevState) => prevState.map((item, i) => (i === index ? !item : item)));
+    setExpanded((prevState) =>
+      prevState.map((item, i) => (i === index ? !item : item))
+    );
   };
 
+  // Slider settings
   const sliderSettings = {
     dots: true,
     infinite: true,
@@ -57,18 +64,19 @@ const MergedSection = () => {
   };
 
   return (
-    
-      <div style={{ backgroundColor: "#a2d9f7", minHeight: "100vh",width:"auto", padding: "40px 0" }}>
-        <div style={{ textAlign: "center" }}>
-          <div style={{ width: "100%", maxWidth: 800, margin: "auto", marginBottom: 40 }}>
+      <Box sx={{ backgroundColor: "#a2d9f7", minHeight: "100vh", py: 5 }}>
+        <Container sx={{ textAlign: "center" }}>
+          
+          {/* Profile Section with Image Slider */}
+          <Box sx={{ width: "100%", maxWidth: 800, mx: "auto", mb: 5 }}>
             <Slider {...sliderSettings}>
               {images.map((src, index) => (
-                <img key={index} src={src} alt={`slide-${index}`} style={{ width: "100%", borderRadius: 8 }} />
+                <Box key={index} component="img" src={src} alt={`slide-${index}`} sx={{ width: "100%", borderRadius: 2 }} />
               ))}
             </Slider>
-          </div>
+          </Box>
 
-          <Typography variant="h4" style={{ marginTop: 20, fontWeight: "bold", cursor: "pointer", color: "#003366" }}>
+          <Typography variant="h4" sx={{ mt: 3, fontWeight: "bold", cursor: "pointer", color: "#003366" }}>
             Fill details to complete your profile
           </Typography>
 
@@ -76,24 +84,25 @@ const MergedSection = () => {
             variant="contained"
             color="primary"
             startIcon={<Description />}
-            style={{ marginTop: 20, fontSize: 16, borderRadius: 20, padding: "20px 40px" }}
+            sx={{ mt: 2, fontSize: 16, borderRadius: 5, padding: "20px 40px" }}
             onClick={() => navigate("/form")}
           >
             Create Profile
           </Button>
 
-          <Grid container spacing={3} justifyContent="center" style={{ marginTop: 40 }}>
+          {/* Articles Grid */}
+          <Grid container spacing={3} justifyContent="center" sx={{ mt: 5 }}>
             {articles.map((article, index) => (
               <Grid item xs={12} sm={6} md={4} key={index}>
-                <Card style={{ borderRadius: 8, boxShadow: 3 }}>
+                <Card sx={{ borderRadius: 2, boxShadow: 3 }}>
                   <CardMedia component="img" height="180" image={article.image} alt={article.title} />
-                  <CardContent style={{ backgroundColor: "#1565c0", color: "white" }}>
+                  <CardContent sx={{ backgroundColor: "#1565c0", color: "white" }}>
                     <Typography variant="h6">{article.title}</Typography>
-                    <Typography variant="body2" style={{ marginTop: 8 }}>
+                    <Typography variant="body2" sx={{ mt: 1 }}>
                       {expanded[index] ? article.description : `${article.description.substring(0, 100)}...`}
                     </Typography>
                     <Button
-                      style={{ marginTop: 8, color: "white", textDecoration: "underline" }}
+                      sx={{ mt: 1, color: "white", textDecoration: "underline" }}
                       onClick={() => toggleReadMore(index)}
                     >
                       {expanded[index] ? "Show Less" : "Read More"}
@@ -104,10 +113,11 @@ const MergedSection = () => {
             ))}
           </Grid>
 
-          <div style={{ marginTop: 40, textAlign: "center" }}>
+          {/* What We Provide Section */}
+          <Box sx={{ mt: 5, textAlign: "center" }}>
             <Typography
               variant="h6"
-              style={{
+              sx={{
                 backgroundColor: "#1565c0",
                 color: "white",
                 display: "inline-block",
@@ -119,21 +129,20 @@ const MergedSection = () => {
               What we provide:
             </Typography>
 
-            <Typography variant="body1" style={{ marginTop: 16, color: "#121147" }}>
+            <Typography variant="body1" sx={{ mt: 2, color: "#121147" }}>
               CareerQuest is your comprehensive Career Guidance platform designed to help students make informed decisions about their future. Our step-by-step approach includes:
             </Typography>
 
-            <Typography variant="body1" style={{ textAlign: "left", marginTop: 16, maxWidth: 800, margin: "auto", color: "#121147" }}>
+            <Typography variant="body1" sx={{ textAlign: "left", mt: 2, maxWidth: 800, mx: "auto", color: "#121147" }}>
               <b>1. Profile Creation:</b> Let us know more about yourself by creating your profile. <br />
               <b>2. Skills Assessment:</b> Take our specialized quiz to identify your strengths. <br />
               <b>3. Personalized Recommendations:</b> Receive tailored career and education suggestions. <br />
               <b>4. Resource Access:</b> Explore detailed information about educational institutions. <br />
               <b>5. Articles:</b> Get more and detailed information about everything by exploring articles.
             </Typography>
-          </div>
-        </div>
-      </div>
-    
+          </Box>
+        </Container>
+      </Box>
   );
 };
 

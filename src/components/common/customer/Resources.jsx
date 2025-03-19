@@ -1,8 +1,6 @@
 import React from 'react';
-import { Container, Grid, Card, CardContent, Typography, Button, Box } from '@mui/material';
+import { Container, Grid, Card, Typography, Button, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import Header from '../customer/Navbar';
-import Footer from '../customer/Footer';
 import schoolIcon from '../../../assets/auth/schoollogo.png';
 import collegeIcon from '../../../assets/auth/collegelogo.png';
 import courseIcon from '../../../assets/auth/courselogo.png';
@@ -25,21 +23,59 @@ const CareerResources = () => {
 
   return (
     <>
-      <Header />
-      <Box sx={{ backgroundColor: '#B0D9F1', minHeight: '100vh', paddingBottom: '2rem', paddingTop: '3rem' }}>
-        <Container>
-          <Typography variant="h4" align="center" gutterBottom sx={{ color: '#005a9c', marginBottom: '1rem' }}>
+      {/* Prevent horizontal scrolling */}
+      <style>
+        {`
+          html, body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            width: 100%;
+          }
+          * {
+            box-sizing: border-box;
+          }
+        `}
+      </style>
+
+      <Box
+        sx={{
+          backgroundColor: '#B0D9F1',
+          minHeight: '100vh',
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          pt: '4rem', // Adjusted spacing below header
+        }}
+      >
+        <Container maxWidth="xl">
+          <Typography variant="h3" align="center" gutterBottom sx={{ color: '#005a9c', mb: 4 }}>
             Career Resources
           </Typography>
-          <Grid container spacing={2} justifyContent="center">
+
+          <Grid container spacing={3} justifyContent="center">
             {resources.map((resource, index) => (
               <Grid item xs={12} sm={6} md={4} key={index}>
-                <Card sx={{ backgroundColor: resource.color, color: '#FFF', height: '270px', width: '220px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', padding: '1rem' }}>
-                  <Box display="flex" justifyContent="center" mb={1} sx={{ backgroundColor: '#FFF', borderRadius: '50%', padding: '10px' }}>
+                <Card
+                  sx={{
+                    backgroundColor: resource.color,
+                    color: '#FFF',
+                    height: '270px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    padding: '1rem',
+                    textAlign: 'center',
+                  }}
+                >
+                  <Box sx={{ backgroundColor: '#FFF', borderRadius: '50%', padding: '10px', mb: 1 }}>
                     <img src={resource.icon} alt={resource.title} style={{ width: '40px', height: '40px' }} />
                   </Box>
-                  <Typography variant="h6" align="center" gutterBottom>{resource.title}</Typography>
-                  <Typography variant="body2" align="center" gutterBottom>{resource.text}</Typography>
+                  <Typography variant="h6">{resource.title}</Typography>
+                  <Typography variant="body2">{resource.text}</Typography>
                   <Button variant="contained" sx={{ mt: 'auto', backgroundColor: '#b3e5fc', color: '#000' }} onClick={() => navigate(resource.link)}>
                     Explore Now
                   </Button>
@@ -47,18 +83,35 @@ const CareerResources = () => {
               </Grid>
             ))}
           </Grid>
-          <Box mt={5} textAlign="center">
-            <Typography variant="h5" sx={{ color: '#005a9c', marginBottom: '1rem' }}>Additional Career Resources</Typography>
+
+          {/* Added extra space between Additional Career Resources and footer */}
+          <Box mt={8} mb={4} textAlign="center">
+            <Typography variant="h4" sx={{ color: '#005a9c', mb: 2 }}>
+              Additional Career Resources
+            </Typography>
           </Box>
-          <Grid container spacing={2} justifyContent="center" mt={1}>
+
+          <Grid container spacing={3} justifyContent="center" mb={10}>
             {additionalResources.map((resource, index) => (
               <Grid item xs={12} sm={6} md={4} key={index}>
-                <Card sx={{ backgroundColor: resource.color, color: '#FFF', height: '270px', width: '220px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', padding: '1rem' }}>
-                  <Box display="flex" justifyContent="center" mb={1} sx={{ backgroundColor: '#FFF', borderRadius: '50%', padding: '10px' }}>
+                <Card
+                  sx={{
+                    backgroundColor: resource.color,
+                    color: '#FFF',
+                    height: '270px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    padding: '1rem',
+                    textAlign: 'center',
+                  }}
+                >
+                  <Box sx={{ backgroundColor: '#FFF', borderRadius: '50%', padding: '10px', mb: 1 }}>
                     <img src={resource.icon} alt={resource.title} style={{ width: '40px', height: '40px' }} />
                   </Box>
-                  <Typography variant="h6" align="center" gutterBottom>{resource.title}</Typography>
-                  <Typography variant="body2" align="center" gutterBottom>{resource.text}</Typography>
+                  <Typography variant="h6">{resource.title}</Typography>
+                  <Typography variant="body2">{resource.text}</Typography>
                   <Button variant="contained" sx={{ mt: 'auto', backgroundColor: '#b3e5fc', color: '#000' }} onClick={() => navigate(resource.link)}>
                     Explore Now
                   </Button>
@@ -68,7 +121,6 @@ const CareerResources = () => {
           </Grid>
         </Container>
       </Box>
-      <Footer />
     </>
   );
 };

@@ -11,6 +11,9 @@ import {
 } from "@mui/material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 // Sample questions
 const questionsData = [
@@ -19,68 +22,70 @@ const questionsData = [
     number: 1,
     text: "If a train travels at 60 km/hr, how long will it take to cover a distance of 300 km?",
     options: ["3 hours", "4 hours", "5 hours", "6 hours"],
+    correctAnswer: "5 hours",
   },
   {
     category: "Logical Reasoning",
     number: 2,
     text: "Complete the sequence: 2, 6, 12, 20,...?",
     options: ["30", "42", "36", "48"],
+    correctAnswer: "30",
   },
   {
     category: "Quantitative Aptitude",
     number: 3,
     text: "What is the value of x in equation : 2x + 5 = 15?",
     options: ["05", "10", "03", "07.5"],
-    selected: "10",
+    correctAnswer: "10",
   },
   {
     category: "Logical Reasoning",
     number: 4,
     text: "If all Flinks are Blinks, and some Blinks are Clinks, then:",
     options: ["All Flinks are Clinks", "Some Flinks might be Clinks", "No Flinks are Clinks", "All Clinks are Flinks"],
-    selected: "All Clinks are Flinks",
+    correctAnswer: "Some Flinks might be Clinks",
   },
   {
     category: "General Awareness",
     number: 5,
     text: "Which of these is not a programming language?",
     options: ["Java", "Python", "Cascada", "Ruby"],
-    selected: "Java",
+    correctAnswer: "Cascada",
   },
   {
     category: "General Awareness",
     number: 6,
     text: "Which field is known as the 'Queen of Science'?",
     options: ["Physics", "Mathematics", "Biology", "Chemistry"],
-    selected: "Chemistry",
+    correctAnswer: "Phsics",
   },
   {
     category: "Verbal Ability",
     number: 7,
     text: "Choose the word that is mostly nearly opposite in meaning to 'Benevolent':",
     options: ["Malevolent", "Charitable", "Generous", "Bengin"],
-    selected: "Charitable",
+    correctAnswer: "Malevolent",
   },
   {
     category: "Verbal Ability",
     number: 8,
     text: "Complete the analogy: Book is to Reader as Song is to:",
     options: ["Writer", "Musician", "Listener", "Composer"],
-    selected: "Musician",
+    correctAnswer: "Listener",
   },
   {
     category: "Enterpreneurship",
     number: 9,
     text: "Which of the following best defines a 'Minimum Viable Product(MVP)'?",
     options: ["The cheapest product that can be sold profitably", "A version with just enough feature to attract early customers", "The smallest possible team needed to create a product", "A product that requires minimal investment"],
-    selected: "The cheapest product that can be sold profitably",
+    correctAnswer: "A version with just enough feature to attract early customers",
   },
   {
     category: "Enterpreneurship",
     number: 10,
     text: "What is the primary purpose of a business model canvas?",
     options: ["To create a detailed financial projection", "To visualize and structure a business concept", "To design a company logo and branding", "To outline a marking strategy"],
-    selected: "To visualize and structure a business concept",
+    correctAnswer: "To visualize and structure a business concept",
   },
 ];
 
@@ -104,8 +109,14 @@ const QuizPage = () => {
   };
 
   // Submit and navigate to the career resource page
-  const handleSubmit = () => {
-    navigate("/Quizprompt");
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.post("quiz/createQuiz", answers);
+      navigate("/scorecard", { state: { score: response.data.score } });
+    } catch (error) {
+      console.error("Error submitting quiz", error);
+      toast.error("Failed to submit quiz");
+    }
   };
 
   return (

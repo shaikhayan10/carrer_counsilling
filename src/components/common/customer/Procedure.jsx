@@ -23,9 +23,6 @@ const CareerAssessment = () => {
 
   return (
     <>
-    <Box sx={{ top: 0, width: "100%", zIndex: 1100 }}>
-        <Navbar />
-      </Box>
     <Fade in={show} timeout={1000}>
       <Box sx={{ backgroundColor: "#c3e4fa", minHeight: "100vh", py: 5 }}>
         <Container maxWidth="lg">
@@ -238,7 +235,6 @@ const CareerAssessment = () => {
         </Container>
       </Box>
     </Fade>
-    <Footer />
     </>
   );
 };

@@ -78,9 +78,7 @@ const coreValues = [
 
 const AboutUsPage = () => {
   return (
-    <>
-      <Navbar />
-
+<>
       {/* About Us Section */}
       <Box sx={{ backgroundColor: "#cfe8fc", py: 5 }}>
         <Container>
@@ -198,9 +196,7 @@ const AboutUsPage = () => {
           </Grid>
         </Container>
       </Box>
-
-      <Footer />
-    </>
+</>
   );
 };
 

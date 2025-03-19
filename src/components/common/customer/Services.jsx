@@ -30,8 +30,8 @@ const articles = [
     };
   
     return (
-      <Box sx={{ backgroundColor: "#92B4E2", color: "#1F3C88" }}>
-        <Header />
+      <Box sx={{ backgroundColor: "#92B4E2", color: "#1F3C88",minHeight:"100vh",display:"flex",flexDirection: "column" }}>
+        <Box sx={{ flex:1 }}>
         <Box sx={{ textAlign: "center", py: 4, backgroundColor: "#004AAD", color: "white" }}>
           <Typography variant="h3" fontWeight="bold">Services</Typography>
         </Box>
@@ -81,7 +81,7 @@ const articles = [
             </Grid>
           ))}
         </Grid>
-        <Footer />
+        </Box>
       </Box>
     );
   };

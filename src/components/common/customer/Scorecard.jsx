@@ -74,3 +74,4 @@ const Scorecard = () => {
 };
 
 export default Scorecard;
+
