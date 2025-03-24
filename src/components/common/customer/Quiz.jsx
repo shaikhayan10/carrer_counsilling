@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -12,90 +12,58 @@ import {
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-
-// Sample questions
-const questionsData = [
-  {
-    category: "Quantitative Aptitude",
-    number: 1,
-    text: "If a train travels at 60 km/hr, how long will it take to cover a distance of 300 km?",
-    options: ["3 hours", "4 hours", "5 hours", "6 hours"],
-    correctAnswer: "5 hours",
-  },
-  {
-    category: "Logical Reasoning",
-    number: 2,
-    text: "Complete the sequence: 2, 6, 12, 20,...?",
-    options: ["30", "42", "36", "48"],
-    correctAnswer: "30",
-  },
-  {
-    category: "Quantitative Aptitude",
-    number: 3,
-    text: "What is the value of x in equation : 2x + 5 = 15?",
-    options: ["05", "10", "03", "07.5"],
-    correctAnswer: "10",
-  },
-  {
-    category: "Logical Reasoning",
-    number: 4,
-    text: "If all Flinks are Blinks, and some Blinks are Clinks, then:",
-    options: ["All Flinks are Clinks", "Some Flinks might be Clinks", "No Flinks are Clinks", "All Clinks are Flinks"],
-    correctAnswer: "Some Flinks might be Clinks",
-  },
-  {
-    category: "General Awareness",
-    number: 5,
-    text: "Which of these is not a programming language?",
-    options: ["Java", "Python", "Cascada", "Ruby"],
-    correctAnswer: "Cascada",
-  },
-  {
-    category: "General Awareness",
-    number: 6,
-    text: "Which field is known as the 'Queen of Science'?",
-    options: ["Physics", "Mathematics", "Biology", "Chemistry"],
-    correctAnswer: "Phsics",
-  },
-  {
-    category: "Verbal Ability",
-    number: 7,
-    text: "Choose the word that is mostly nearly opposite in meaning to 'Benevolent':",
-    options: ["Malevolent", "Charitable", "Generous", "Bengin"],
-    correctAnswer: "Malevolent",
-  },
-  {
-    category: "Verbal Ability",
-    number: 8,
-    text: "Complete the analogy: Book is to Reader as Song is to:",
-    options: ["Writer", "Musician", "Listener", "Composer"],
-    correctAnswer: "Listener",
-  },
-  {
-    category: "Enterpreneurship",
-    number: 9,
-    text: "Which of the following best defines a 'Minimum Viable Product(MVP)'?",
-    options: ["The cheapest product that can be sold profitably", "A version with just enough feature to attract early customers", "The smallest possible team needed to create a product", "A product that requires minimal investment"],
-    correctAnswer: "A version with just enough feature to attract early customers",
-  },
-  {
-    category: "Enterpreneurship",
-    number: 10,
-    text: "What is the primary purpose of a business model canvas?",
-    options: ["To create a detailed financial projection", "To visualize and structure a business concept", "To design a company logo and branding", "To outline a marking strategy"],
-    correctAnswer: "To visualize and structure a business concept",
-  },
-];
 
 const QuizPage = () => {
   const navigate = useNavigate();
-  
-  // State to track selected answers
   const [answers, setAnswers] = useState({});
+  const [questions, setQuestions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [timeRemaining, setTimeRemaining] = useState(20 * 60); // 20 minutes in seconds
+  const [timerRunning, setTimerRunning] = useState(true);
 
-  // Handle selection change
+  const generateUniqueUserId = () => {
+    return 'user_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  };
+
+  const getUserId = () => {
+    let userId = localStorage.getItem("userId");
+    if (!userId) {
+      userId = generateUniqueUserId();
+      localStorage.setItem("userId", userId);
+    }
+    return userId;
+  };
+
+  const userId = getUserId();
+
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/quiz/getQuizQuestions");
+        setQuestions(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching questions", error);
+        toast.error("Failed to fetch questions");
+        setLoading(false);
+      }
+    };
+
+    fetchQuestions();
+  }, []);
+
+  useEffect(() => {
+    if (timerRunning && timeRemaining > 0) {
+      const timer = setInterval(() => {
+        setTimeRemaining((prevTime) => prevTime - 1);
+      }, 1000);
+      return () => clearInterval(timer);
+    } else if (timeRemaining === 0) {
+      handleSubmit(); // Auto-submit when time is up
+    }
+  }, [timeRemaining, timerRunning]);
+
   const handleSelect = (questionNumber, value) => {
     setAnswers((prev) => ({
       ...prev,
@@ -103,15 +71,14 @@ const QuizPage = () => {
     }));
   };
 
-  // Clear all selected answers
   const handleClear = () => {
     setAnswers({});
   };
 
-  // Submit and navigate to the career resource page
   const handleSubmit = async () => {
+    setTimerRunning(false); // Stop the timer when submitting
     try {
-      const response = await axios.post("quiz/createQuiz", answers);
+      const response = await axios.post("http://localhost:3001/quiz/submitQuiz", { userId, answers });
       navigate("/scorecard", { state: { score: response.data.score } });
     } catch (error) {
       console.error("Error submitting quiz", error);
@@ -119,10 +86,19 @@ const QuizPage = () => {
     }
   };
 
+  const formatTime = (time) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+  };
+
+  if (loading) {
+    return <Typography>Loading questions...</Typography>;
+  }
+
   return (
     <Box sx={{ backgroundColor: "#D5EFFF", minHeight: "100vh", py: 4 }}>
       <Container maxWidth="sm">
-        {/* Header */}
         <Box
           sx={{
             backgroundColor: "#0057B3",
@@ -140,7 +116,6 @@ const QuizPage = () => {
           </Typography>
         </Box>
 
-        {/* Timer Section (Right-Aligned) */}
         <Box
           sx={{
             display: "flex",
@@ -163,22 +138,11 @@ const QuizPage = () => {
             }}
           >
             <AccessTimeIcon sx={{ mr: 1 }} />
-            <Typography fontWeight="bold">20:00 minutes</Typography>
+            <Typography fontWeight="bold">{formatTime(timeRemaining)} minutes</Typography>
           </Box>
         </Box>
-        <Typography
-          color="#0057B3"
-          fontSize="12px"
-          fontWeight="bold"
-          textAlign="right"
-          mt={0.5}
-          pr={6.5}
-        >
-          Time Remaining:
-        </Typography>
 
-        {/* Render Questions */}
-        {questionsData.map((question) => (
+        {questions.map((question) => (
           <Box
             key={question.number}
             sx={{
@@ -189,7 +153,6 @@ const QuizPage = () => {
               mt: 3,
             }}
           >
-            {/* Category & Question Number */}
             <Grid container spacing={1} mb={2}>
               <Grid item>
                 <Box
@@ -223,12 +186,10 @@ const QuizPage = () => {
               </Grid>
             </Grid>
 
-            {/* Question Text */}
             <Typography variant="body1" fontWeight="bold" mb={1}>
               {question.text}
             </Typography>
 
-            {/* Options */}
             <RadioGroup
               value={answers[question.number] || ""}
               onChange={(e) => handleSelect(question.number, e.target.value)}
@@ -245,7 +206,6 @@ const QuizPage = () => {
           </Box>
         ))}
 
-        {/* Buttons Section */}
         <Box
           sx={{
             display: "flex",

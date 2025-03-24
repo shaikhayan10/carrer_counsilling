@@ -1,9 +1,42 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Typography, Button, Grid, Container } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Scorecard = () => {
   const navigate = useNavigate();
+  const [userResponse, setUserResponse] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch userId from localStorage
+  const userId = localStorage.getItem("userId");
+
+  useEffect(() => {
+    const fetchUserResponse = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3001/quiz/getUserScore/${userId}`);
+        setUserResponse(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching user response", error);
+        toast.error("Failed to fetch user response");
+        setLoading(false);
+      }
+    };
+
+    if (userId) {
+      fetchUserResponse();
+    }
+  }, [userId]);
+
+  if (loading) {
+    return <Typography>Loading score...</Typography>;
+  }
+
+  if (!userResponse) {
+    return <Typography>No data found for this user.</Typography>;
+  }
 
   return (
     <Container maxWidth="sm">
@@ -16,13 +49,13 @@ const Scorecard = () => {
 
       {/* Score Section */}
       <Box sx={{ backgroundColor: "#D5EFFF", p: 4, textAlign: "center", borderRadius: "0 0 10px 10px" }}>
-        {/* Score Text with 10/10 */}
+        {/* Score Text */}
         <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 1 }}>
           <Typography variant="h6" color="#003366">
             Excellent! You've scored
           </Typography>
           <Box sx={{ backgroundColor: "#0057B3", color: "white", px: 2, py: 0.5, borderRadius: 2 }}>
-            <Typography variant="h6">10/10</Typography>
+            <Typography variant="h6">{userResponse.score}/{userResponse.totalQuestions}</Typography>
           </Box>
         </Box>
 
@@ -31,10 +64,10 @@ const Scorecard = () => {
         {/* Score Details */}
         <Grid container spacing={2} justifyContent="center">
           {[
-            { label: "Total Questions", value: "10" },
-            { label: "Correct Answers", value: "10" },
-            { label: "Questions Attempted", value: "10" },
-            { label: "Incorrect Answers", value: "0" },
+            { label: "Total Questions", value: userResponse.totalQuestions },
+            { label: "Correct Answers", value: userResponse.correctAnswers },
+            { label: "Questions Attempted", value: userResponse.questionsAttempted },
+            { label: "Incorrect Answers", value: userResponse.wrongAnswers },
           ].map((item, index) => (
             <Grid item xs={6} key={index}>
               <Box sx={{ backgroundColor: "#0057B3", color: "white", p: 1.5, borderRadius: 2, textAlign: "center" }}>
@@ -74,4 +107,3 @@ const Scorecard = () => {
 };
 
 export default Scorecard;
-
