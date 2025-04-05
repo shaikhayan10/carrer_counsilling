@@ -19,7 +19,7 @@ const QuizPage = () => {
   const [answers, setAnswers] = useState({});
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [timeRemaining, setTimeRemaining] = useState(20 * 60); // 20 minutes in seconds
+  const [timeRemaining, setTimeRemaining] = useState(20 * 60);
   const [timerRunning, setTimerRunning] = useState(true);
 
   const generateUniqueUserId = () => {
@@ -60,7 +60,7 @@ const QuizPage = () => {
       }, 1000);
       return () => clearInterval(timer);
     } else if (timeRemaining === 0) {
-      handleSubmit(); // Auto-submit when time is up
+      handleSubmit();
     }
   }, [timeRemaining, timerRunning]);
 
@@ -76,7 +76,7 @@ const QuizPage = () => {
   };
 
   const handleSubmit = async () => {
-    setTimerRunning(false); // Stop the timer when submitting
+    setTimerRunning(false);
     try {
       const response = await axios.post("http://localhost:3001/quiz/submitQuiz", { userId, answers });
       navigate("/scorecard", { state: { score: response.data.score } });
